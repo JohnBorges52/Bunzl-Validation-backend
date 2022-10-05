@@ -1,14 +1,30 @@
 const router = require('express').Router();
-const API_KEY = process.env.MAILGUN_API_KEY;
-const DOMAIN = process.env.MAILGUN_DOMAIN;
+// const apiKey = process.env.MAILGUN_API_KEY;
+// const DOMAIN = process.env.MAILGUN_DOMAIN;
 
 
-const Mailgun = require('mailgun.js');
-const formData = require('form-data');
+// const Mailgun = require('mailgun.js');
+// const formData = require('form-data');
 
-const mailgun = new Mailgun(formData);
+// const mailgun = new Mailgun(formData);
 
-const client = mailgun.client({ username: API_KEY, key: DOMAIN });
+// const client = mailgun.client({ username: apiKey, key: DOMAIN });
+
+
+const nodemailer = require("nodemailer");
+
+var transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
+  }
+
+});
+
+
+
+
 
 
 // all routes will go here 
@@ -37,22 +53,27 @@ router.post("/sendemail", (req, res) => {
 
   const { clientName, orderNumber, email, itemsList } = req.body;
 
-  const messageData = {
-    from: 'Bunzl Cleaning & Hygiene',
-    to: `${email}`,
-    subject: `${orderNumber}`,
-    html: `<p>Hello ${clientName}, here is the list of the items that you need ${itemsList}</p>`
+  var mailOptions = {
+    from: "contactpomodoroapp@gmail.com",
+    to: email,
+    subject: `Your Item(s) is/are ready!`,
+    text: `
+    Hello ${clientName}!
+    Your backorder number: ${orderNumber} is ready for pick up.
+    Here is a list of the items: ${itemsList}
+    
+    Thank you!`,
   };
+  transporter.sendMail(mailOptions, (err) => {
+    if (err) {
+      console.log(err);
 
-  client.messages.create(DOMAIN, messageData)
-    .then(res => {
-      console.log(res)
-    })
-    .catch(err => {
-      console.error(err)
-    })
+    } else {
+      console.log("Email sent: ");
+    }
 
-});
+  });
 
+})
 
 module.exports = router;
