@@ -9,9 +9,12 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 const cors = require('cors');
-app.use(cors({
-  origin: "*"
-}));
+const corsOptions = {
+  origin: '*',
+  credentials: true,
+  optionSuccessStatus: 200,
+}
+app.use(cors(corsOptions));
 
 
 
