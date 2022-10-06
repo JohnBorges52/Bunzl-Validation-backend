@@ -18,15 +18,16 @@ router.post('/sendsms', (req, res) => {
   const message = req.body.finalMessage;
   const telephone = req.body.telephone;
 
-  const sid = process.env.ACCOUNT_SID;
-  const authToken = process.env.AUTH_TOKEN;
   const twilio = require('twilio')(sid, authToken);
 
+  const sid = process.env.ACCOUNT_SID;
+  const authToken = process.env.AUTH_TOKEN;
+
   twilio.messages.create({
-    from: process.env.PHONE_NUMBER,
+    body: message,
+    from: "+17179876702",
     to: telephone,
-    body: message
-  }).then(message => console.log(message))
+  }).then(message => console.log(message.sid))
     .catch(err => console.log(err))
 
 
