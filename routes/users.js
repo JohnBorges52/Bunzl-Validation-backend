@@ -1,15 +1,4 @@
 const router = require('express').Router();
-// const apiKey = process.env.MAILGUN_API_KEY;
-// const DOMAIN = process.env.MAILGUN_DOMAIN;
-
-
-// const Mailgun = require('mailgun.js');
-// const formData = require('form-data');
-
-// const mailgun = new Mailgun(formData);
-
-// const client = mailgun.client({ username: apiKey, key: DOMAIN });
-
 
 const nodemailer = require("nodemailer");
 
@@ -21,10 +10,6 @@ var transporter = nodemailer.createTransport({
   }
 
 });
-
-
-
-
 
 
 // all routes will go here 
