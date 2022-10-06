@@ -27,7 +27,7 @@ router.post('/sendsms', (req, res) => {
     body: message
   })
     .then((res) => {
-      console.log("msg has been sent")
+      console.log(res, "msg has been sent")
     })
     .catch((e) => { console.log(e) })
 
