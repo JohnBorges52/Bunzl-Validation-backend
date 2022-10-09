@@ -1,6 +1,10 @@
 const router = require('express').Router();
-
 const nodemailer = require("nodemailer");
+
+const sid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
+
+const twilio = require('twilio')(sid, authToken);
 
 var transporter = nodemailer.createTransport({
   service: "gmail",
@@ -11,18 +15,11 @@ var transporter = nodemailer.createTransport({
 
 });
 
-
 // all routes will go here 
 router.post('/sendsms', (req, res) => {
 
   const message = req.body.finalMessage;
   const telephone = req.body.telephone;
-
-  const sid = process.env.ACCOUNT_SID;
-
-  const twilio = require('twilio')(sid, authToken);
-
-  const authToken = process.env.AUTH_TOKEN;
 
   twilio.messages.create({
     body: message,
@@ -31,8 +28,6 @@ router.post('/sendsms', (req, res) => {
   })
     .then(message => console.log(message.sid))
     .catch(err => console.log(err))
-
-
 });
 
 router.post("/sendemail", (req, res) => {
