@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const nodemailer = require("nodemailer");
 
+
 const sid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
-
 const twilio = require('twilio')(sid, authToken);
 
 var transporter = nodemailer.createTransport({
