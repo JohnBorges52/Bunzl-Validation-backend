@@ -1,3 +1,4 @@
+const pg = require('pg');
 const router = require('express').Router();
 const nodemailer = require("nodemailer");
 
@@ -5,6 +6,8 @@ const nodemailer = require("nodemailer");
 const sid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
 const twilio = require('twilio')(sid, authToken);
+
+const dbConnectionString = process.env.ELEPHANT_DB_URL;
 
 var transporter = nodemailer.createTransport({
   service: "gmail",
@@ -56,5 +59,41 @@ router.post("/sendemail", (req, res) => {
   });
 
 })
+
+
+router.post("/userlogin", (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  var client = new pg.Client(dbConnectionString);
+
+  client.connect((err) => {
+    if (err) {
+      return console.error('couldn\'t connect to postgres', err);
+    }
+    const userQuery = `SELECT * FROM users WHERE email = $1;`
+
+    client.query(userQuery, [email])
+      .then((data) => {
+        console.log(data.rows[0])
+        if (data.rows.length === 0) {
+          console.log("User not Found")
+          res.send("User not Found")
+        }
+        if (data.rows.length !== 0 && data.rows[0].password !== password) {
+          console.log("Wrong Password")
+          res.send("Wrong Password")
+        }
+        if (data.rows.length !== 0 && data.rows[0].password === password) {
+          console.log("Login Successful")
+          res.json(data.rows);
+        }
+      })
+
+  })
+
+})
+
+
+
 
 module.exports = router;
