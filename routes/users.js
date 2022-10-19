@@ -74,7 +74,7 @@ router.post("/userlogin", (req, res, next) => {
 
     client.query(userQuery, [email])
       .then((data) => {
-        console.log(data.rows[0])
+        // console.log(data.rows[0])
         if (data.rows.length === 0) {
           console.log("User not Found")
           res.send("User not Found")
@@ -84,7 +84,6 @@ router.post("/userlogin", (req, res, next) => {
           res.send("Wrong Password")
         }
         if (data.rows.length !== 0 && data.rows[0].password === password) {
-          console.log("Login Successful")
           res.json(data.rows);
         }
       })
