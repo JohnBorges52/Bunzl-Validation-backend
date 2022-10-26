@@ -18,6 +18,16 @@ var transporter = nodemailer.createTransport({
 
 });
 
+const randomPswGenerator = () => {
+  let char = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  let result = ''
+  for (let i = 0; i < 6; i++) {
+    result += char.charAt(Math.floor(Math.random() * char.length))
+  }
+  return result
+}
+
+
 // all routes will go here 
 router.post('/sendsms', (req, res) => {
 
@@ -91,6 +101,58 @@ router.post("/userlogin", (req, res, next) => {
   })
 
 })
+
+router.post("/forgot-password", (req, res, next) => {
+
+  const newPsw = randomPswGenerator()
+  const email = req.body.email;
+  var client = new pg.Client(dbConnectionString);
+
+
+  client.connect((err) => {
+    if (err) {
+      return console.error('couldn\'t connect to postgres', err);
+    }
+    const userQuery = `SELECT * FROM users WHERE email = $1;`
+    const changePassword = `UPDATE users SET password = $1 WHERE email = $2`
+
+    client.query(userQuery, [email])
+      .then((data) => {
+        if (data.rows.length === 0) {
+          console.log("User not Found")
+          res.send("User not Found")
+        } else {
+          client.query(changePassword, [newPsw, email])
+            .then((data) => {
+              console.log(data.rows);
+              const mailOptions = {
+                from: "contactpomodoroapp@gmail.com",
+                to: email,
+                subject: `Password Change`,
+                text: `
+              Hello ${email}!
+
+              Your password has been changed. Here is the new code to change to a new one: ${newPsw}.
+
+              Thank you!`,
+
+              }
+              transporter.sendMail(mailOptions, (err) => {
+                if (err) {
+                  console.log(err);
+
+                } else {
+                  console.log("Email sent: ");
+                }
+
+              });
+            })
+
+        }
+      })
+  })
+})
+
 
 
 
