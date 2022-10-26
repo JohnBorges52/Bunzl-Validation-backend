@@ -125,6 +125,8 @@ router.post("/forgot-password", (req, res, next) => {
           client.query(changePassword, [newPsw, email])
             .then((data) => {
               console.log(data.rows);
+              console.log("Code Sent");
+
               const mailOptions = {
                 from: "contactpomodoroapp@gmail.com",
                 to: email,
@@ -146,6 +148,7 @@ router.post("/forgot-password", (req, res, next) => {
                 }
 
               });
+              res.send("Code Sent")
             })
 
         }
@@ -153,8 +156,45 @@ router.post("/forgot-password", (req, res, next) => {
   })
 })
 
+router.post("/change-password", (req, res, next) => {
+  const email = req.body.email
+  const code = req.body.code
+  const password = req.body.password
+
+  var client = new pg.Client(dbConnectionString);
 
 
+  client.connect((err) => {
+    if (err) {
+      return console.error('couldn\'t connect to postgres', err);
+    }
+    const userQuery = `SELECT * FROM users WHERE email = $1;`
+    const changePassword = `UPDATE users SET password = $1 WHERE email = $2`
+
+    client.query(userQuery, [email])
+      .then((data) => {
+        if (data.rows.length === 0) {
+          console.log("User not Found")
+          res.send("User not Found")
+        } if (data.rows.length !== 0 && data.rows[0].password !== code) {
+          console.log("Wrong Code")
+          res.send("Wrong Code")
+        } if (data.rows.length !== 0 && data.rows[0].password === code) {
+          client.query(changePassword, [password, email])
+            .then((res) => {
+              res.send("Password updated")
+            })
+
+        }
+
+
+
+      })
+
+
+  })
+
+})
 
 
 module.exports = router;
