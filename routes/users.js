@@ -181,20 +181,21 @@ router.post("/change-password", (req, res, next) => {
           res.send("Wrong Code")
         } if (data.rows.length !== 0 && data.rows[0].password === code) {
           client.query(changePassword, [password, email])
-            .then((res) => {
-              res.send("Password updated")
-            })
-
+          res.send("Password updated")
         }
-
-
 
       })
 
 
+
   })
 
+
 })
+
+
+
+
 
 
 module.exports = router;
