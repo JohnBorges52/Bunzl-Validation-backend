@@ -72,7 +72,8 @@ router.post("/sendemail", (req, res) => {
 
 router.get('/', (req, res) => {
   const command = "SELECT * FROM users";
-  db.query(command)
+  var client = new pg.Client(dbConnectionString);
+  client.query(command)
     .then(data => {
       res.json(data.rows);
     })
