@@ -70,6 +70,13 @@ router.post("/sendemail", (req, res) => {
 
 })
 
+router.get('/', (req, res) => {
+  const command = "SELECT * FROM users";
+  db.query(command)
+    .then(data => {
+      res.json(data.rows);
+    })
+});
 
 router.post("/userlogin", (req, res, next) => {
   const email = req.body.email;
