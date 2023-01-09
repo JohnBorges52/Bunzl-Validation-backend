@@ -7,7 +7,7 @@ const sid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
 const twilio = require('twilio')(sid, authToken);
 
-const dbConnectionString = process.env.ELEPHANT_DB_URL;
+const dbConnectionString = process.env.RAILWAY_CONNECTION_URL;
 
 var transporter = nodemailer.createTransport({
   service: "gmail",
@@ -107,7 +107,6 @@ router.post("/forgot-password", (req, res, next) => {
   const newPsw = randomPswGenerator()
   const email = req.body.email;
   var client = new pg.Client(dbConnectionString);
-
 
   client.connect((err) => {
     if (err) {
