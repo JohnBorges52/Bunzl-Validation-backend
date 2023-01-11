@@ -142,9 +142,9 @@ module.exports = (db) => {
                   subject: `Password Change`,
                   text: `
                 Hello ${email}!
-                
+
                 Your password has been changed. Here is the new code to change to a new one: ${newPsw}.
-                
+
                 Thank you!`,
 
                 }
@@ -209,4 +209,3 @@ module.exports = (db) => {
 
 
 
-module.exports = router;
