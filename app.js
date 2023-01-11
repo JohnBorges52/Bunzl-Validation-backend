@@ -3,20 +3,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const db = require('./configs/db.config');
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
 
 const cors = require('cors');
-const corsOptions = {
-  origin: '*',
-  credentials: true,
-  optionSuccessStatus: 200,
-}
-app.use(cors(corsOptions));
-
-
+var app = express();
+const cors = require('cors');
+app.use(cors({
+  origin: "*"
+}));
 
 
 app.use(logger('dev'));
@@ -26,6 +26,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', usersRouter(db));
 
 module.exports = app;
