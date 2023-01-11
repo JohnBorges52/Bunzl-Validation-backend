@@ -11,7 +11,7 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-const cors = require('cors');
+
 var app = express();
 const cors = require('cors');
 app.use(cors({
