@@ -1,10 +1,15 @@
 // Database connections
 const { Pool } = require('pg');
 
-const { RAILWAY_CONNECTION_URL } = process.env;
+const { DATABASE_URL, PGDATABASE, PGHOST, PGPASSWORD, PGPORT, PGUSER } = process.env;
 
 const pool = new Pool({
-  RAILWAY_CONNECTION_URL: RAILWAY_CONNECTION_URL,
+  DATABASE_URL: DATABASE_URL,
+  PGDATABASE: PGDATABASE,
+  PGHOST: PGHOST,
+  PGPASSORD: PGPASSWORD,
+  PGPORT: PGPORT,
+  PGUSER: PGUSER,
 
 })
 
